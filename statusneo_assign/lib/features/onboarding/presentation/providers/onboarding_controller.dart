@@ -12,7 +12,7 @@ class OnboardingController extends Notifier<OnboardingState> {
   Future<void> submit() async {
     final form = ref.read(onboardingFormProvider);
 
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(isLoading: true, error: null, isOffline: false);
 
     try {
       final isConnected = await ref.read(connectivityProvider).isConnected();
@@ -33,7 +33,7 @@ class OnboardingController extends Notifier<OnboardingState> {
 
       state = state.copyWith(isLoading: false, recommendation: recommendation);
     } on NetworkException {
-      state = state.copyWith(isLoading: false, error: 'No internet connection');
+      state = state.copyWith(isLoading: false, isOffline: true);
     } on ServerException catch (e) {
       state = state.copyWith(isLoading: false, error: e.message);
     } catch (_) {

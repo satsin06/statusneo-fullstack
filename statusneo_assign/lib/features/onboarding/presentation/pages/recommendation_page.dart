@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/widgets/error_state_view.dart';
+import '../../../../core/widgets/no_connection_view.dart';
 import '../../../../core/widgets/shimmer/recommendation_shimmer.dart';
 import '../providers/onboarding_controller.dart';
 
@@ -18,6 +19,13 @@ class RecommendationPage extends ConsumerWidget {
         builder: (_) {
           if (state.isLoading) {
             return const RecommendationShimmer();
+          }
+
+          if (state.isOffline) {
+            return NoConnectionView(
+              onRetry: () =>
+                  ref.read(onboardingControllerProvider.notifier).submit(),
+            );
           }
 
           if (state.error != null) {
@@ -98,16 +106,10 @@ class RecommendationPage extends ConsumerWidget {
     );
   }
 
-  Widget _infoCard({
-    required String title,
-    required String value,
-  }) {
+  Widget _infoCard({required String title, required String value}) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
-      child: ListTile(
-        title: Text(title),
-        subtitle: Text(value),
-      ),
+      child: ListTile(title: Text(title), subtitle: Text(value)),
     );
   }
 }

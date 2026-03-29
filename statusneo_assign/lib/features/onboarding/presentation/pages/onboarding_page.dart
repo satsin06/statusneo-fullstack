@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/error_state_view.dart';
+import '../../../../core/widgets/no_connection_view.dart';
 import '../../../../core/widgets/shimmer/recommendation_shimmer.dart';
 import '../providers/onboarding_controller.dart';
 import '../providers/onboarding_form_provider.dart';
@@ -55,6 +56,12 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         key: _formKey,
         child: ListView(
           children: [
+            if (state.isOffline)
+              NoConnectionView(
+                onRetry: () {
+                  ref.read(onboardingControllerProvider.notifier).submit();
+                },
+              ),
             if (state.error != null) ErrorStateView(message: state.error!),
 
             _textField(
