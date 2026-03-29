@@ -4,6 +4,7 @@ import cors from 'cors';
 import { requestLogger } from '../core/middleware/request-logger';
 import { notFoundHandler } from '../core/errors/not-found-handler';
 import { errorHandler } from '../core/errors/error-handler';
+import petsRoutes from '../features/pets/presentation/pets.routes';
 
 export const createApp = () => {
   const app = express();
@@ -19,6 +20,8 @@ export const createApp = () => {
       message: 'Server is running',
     });
   });
+
+  app.use('/api/pets', petsRoutes);
 
   app.use(notFoundHandler);
   app.use(errorHandler);
