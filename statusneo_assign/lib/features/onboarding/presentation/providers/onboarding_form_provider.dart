@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/storage/hive_service.dart';
+import '../../data/models/pet_profile_local_model.dart';
 import '../../domain/entities/pet_profile_entity.dart';
 
 class OnboardingFormState {
@@ -21,6 +23,19 @@ class OnboardingFormState {
     this.activityLevel = 'medium',
     this.allergies = const [],
   });
+
+  factory OnboardingFormState.fromEntity(PetProfileEntity entity) {
+    return OnboardingFormState(
+      name: entity.name,
+      species: entity.species,
+      breed: entity.breed,
+      ageYears: entity.ageYears.toString(),
+      ageMonths: entity.ageMonths.toString(),
+      weight: entity.weightKg.toString(),
+      activityLevel: entity.activityLevel,
+      allergies: entity.allergies,
+    );
+  }
 
   OnboardingFormState copyWith({
     String? name,
@@ -79,6 +94,24 @@ class OnboardingFormNotifier extends Notifier<OnboardingFormState> {
       list.add(allergy);
     }
     state = state.copyWith(allergies: list);
+  }
+
+  Future<void> saveProfile() async {
+    final box = HiveService.getPetBox();
+    final entity = state.toEntity();
+    final map = PetProfileLocalModel.toMap(entity);
+
+    await box.put(HiveService.petProfileKey, map);
+  }
+
+  void loadSavedProfile() {
+    final box = HiveService.getPetBox();
+    final saved = box.get(HiveService.petProfileKey);
+
+    if (saved != null && saved is Map) {
+      final entity = PetProfileLocalModel.fromMap(saved);
+      state = OnboardingFormState.fromEntity(entity);
+    }
   }
 }
 

@@ -24,33 +24,25 @@ class OnboardingController extends Notifier<OnboardingState> {
       final createPet = ref.read(createPetUseCaseProvider);
       final getRecommendation = ref.read(getRecommendationUseCaseProvider);
 
-      final petId = await createPet(form.toEntity());
+      final petEntity = form.toEntity();
+
+      final petId = await createPet(petEntity);
       final recommendation = await getRecommendation(petId);
 
-      state = state.copyWith(
-        isLoading: false,
-        recommendation: recommendation,
-      );
+      await ref.read(onboardingFormProvider.notifier).saveProfile();
+
+      state = state.copyWith(isLoading: false, recommendation: recommendation);
     } on NetworkException {
-      state = state.copyWith(
-        isLoading: false,
-        error: 'No internet connection',
-      );
+      state = state.copyWith(isLoading: false, error: 'No internet connection');
     } on ServerException catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.message,
-      );
+      state = state.copyWith(isLoading: false, error: e.message);
     } catch (_) {
-      state = state.copyWith(
-        isLoading: false,
-        error: 'Something went wrong',
-      );
+      state = state.copyWith(isLoading: false, error: 'Something went wrong');
     }
   }
 }
 
 final onboardingControllerProvider =
     NotifierProvider<OnboardingController, OnboardingState>(
-  OnboardingController.new,
-);
+      OnboardingController.new,
+    );
