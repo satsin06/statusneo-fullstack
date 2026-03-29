@@ -4,6 +4,7 @@ import cors from 'cors';
 import { requestLogger } from '../core/middleware/request-logger';
 import { notFoundHandler } from '../core/errors/not-found-handler';
 import { errorHandler } from '../core/errors/error-handler';
+import { setupSwagger } from '../docs/swagger';
 import petsRoutes from '../features/pets/presentation/pets.routes';
 
 export const createApp = () => {
@@ -22,6 +23,8 @@ export const createApp = () => {
   });
 
   app.use('/api/pets', petsRoutes);
+
+  setupSwagger(app);
 
   app.use(notFoundHandler);
   app.use(errorHandler);
