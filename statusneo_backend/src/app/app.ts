@@ -1,12 +1,16 @@
 import express from 'express';
 import cors from 'cors';
 
+import { requestLogger } from '../core/middleware/request-logger';
+import { notFoundHandler } from '../core/errors/not-found-handler';
+import { errorHandler } from '../core/errors/error-handler';
+
 export const createApp = () => {
   const app = express();
 
-  // Middlewares
   app.use(cors());
   app.use(express.json());
+  app.use(requestLogger);
 
   // Health route
   app.get('/health', (_req, res) => {
@@ -15,6 +19,9 @@ export const createApp = () => {
       message: 'Server is running',
     });
   });
+
+  app.use(notFoundHandler);
+  app.use(errorHandler);
 
   return app;
 };
