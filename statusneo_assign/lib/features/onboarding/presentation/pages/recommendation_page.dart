@@ -111,6 +111,14 @@ class RecommendationContent extends StatelessWidget {
           (product) => Card(
             margin: const EdgeInsets.only(bottom: 12),
             child: ListTile(
+              leading: Image.network(
+                product.imageUrl,
+                width: 60,
+                height: 60,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.error, color: Colors.red),
+              ),
               title: Text(product.name),
               subtitle: Text(product.description),
               trailing: Text('AED ${product.price.toStringAsFixed(0)}'),
