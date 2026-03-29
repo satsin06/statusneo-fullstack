@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/error_state_view.dart';
+import '../../../../core/widgets/shimmer/recommendation_shimmer.dart';
 import '../providers/onboarding_controller.dart';
 import '../providers/onboarding_form_provider.dart';
 import '../providers/onboarding_state.dart';
@@ -34,7 +35,11 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
       body: Stack(
         children: [
           _buildForm(form),
-          if (controller.isLoading) _buildLoadingOverlay(),
+          if (controller.isLoading)
+            Container(
+              color: Colors.black.withValues(alpha: 0.1),
+              child: const RecommendationShimmer(),
+            ),
         ],
       ),
     );
@@ -147,12 +152,12 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     );
   }
 
-  Widget _buildLoadingOverlay() {
-    return Container(
-      color: Colors.black.withOpacity(0.2),
-      child: const Center(child: CircularProgressIndicator()),
-    );
-  }
+  // Widget _buildLoadingOverlay() {
+  //   return Container(
+  //     color: Colors.black.withOpacity(0.2),
+  //     child: const Center(child: CircularProgressIndicator()),
+  //   );
+  // }
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
