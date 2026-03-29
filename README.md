@@ -10,7 +10,7 @@ This repository contains:
 ## Tech Stack
 
 ### Flutter App
-- Flutter
+- Flutter (version 3.38.7)
 - Riverpod
 - Dio
 - Hive
@@ -18,7 +18,7 @@ This repository contains:
 - Shimmer
 
 ### Backend
-- Node.js
+- Node.js (v25.8.2)
 - Express
 - TypeScript (strict)
 - Zod
